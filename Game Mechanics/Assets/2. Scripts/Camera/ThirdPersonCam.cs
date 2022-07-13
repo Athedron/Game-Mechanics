@@ -16,7 +16,16 @@ public class ThirdPersonCam : MonoBehaviour
     [HideInInspector] public float verticalInput;
 
     private float rotationSpeed;
+    private Transform combatLookAt;
+    private Vector3 directionToCombatLook;
 
+    private CameraStyle cameraStyle;
+
+    public enum CameraStyle
+    {
+        Basic,
+        Combat
+    }
 
     void Start()
     {
@@ -28,7 +37,10 @@ public class ThirdPersonCam : MonoBehaviour
         playerRb = player.GetComponent<Rigidbody>();
         playerController = player.GetComponent<CharacterController>();
 
+        // Camera
         rotationSpeed = playerController.cameraRotationSpeed;
+        cameraStyle = CameraStyle.Combat;
+        combatLookAt = orientation.GetChild(0).transform;
 
         // Setting Cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -42,18 +54,38 @@ public class ThirdPersonCam : MonoBehaviour
 
     public void MoveCamera()
     {
-        // Rotate orientation
-        viewDirection = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
-        orientation.forward = viewDirection.normalized;
+        
 
-        // Rotate Player object
-        horizontalInput = playerController.horizontalInput;
-        verticalInput = playerController.verticalInput;
-        inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (inputDirection != Vector3.zero)
+        switch (cameraStyle)
         {
-            playerObj.forward = Vector3.Slerp(playerObj.forward, inputDirection.normalized, Time.deltaTime * rotationSpeed);
+            case CameraStyle.Basic:
+
+                // Rotate orientation
+                viewDirection = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+                orientation.forward = viewDirection.normalized;
+
+                // Rotate Player object
+                horizontalInput = playerController.horizontalInput;
+                verticalInput = playerController.verticalInput;
+                inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+                if (inputDirection != Vector3.zero)
+                {
+                    playerObj.forward = Vector3.Slerp(playerObj.forward, inputDirection.normalized, Time.deltaTime * rotationSpeed);
+                }
+
+                break;
+
+            case CameraStyle.Combat:
+
+                // Rotate orientation
+                directionToCombatLook = combatLookAt.position - new Vector3(transform.position.x, combatLookAt.position.y, transform.position.z);
+                orientation.forward = directionToCombatLook.normalized;
+
+                playerObj.forward = directionToCombatLook.normalized;
+
+                break;
         }
     }
 }
