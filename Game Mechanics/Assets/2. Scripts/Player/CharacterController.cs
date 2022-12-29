@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : MonoBehaviour, IDamagable
 {
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -31,10 +31,15 @@ public class CharacterController : MonoBehaviour
     [Header("Camera")]
     public float cameraRotationSpeed;
 
+
     [Header("GroundCheck")]
     public float playerHeight;
     public LayerMask whatIsGround;
     private bool grounded;
+
+    [Header("Stats")]
+    public int health = 80;
+
 
     void Start()
     {
@@ -123,5 +128,17 @@ public class CharacterController : MonoBehaviour
             playerRb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
            
+    }
+
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log("Personal Oof");
+    }
+    
+    public void Die()
+    {
+        Debug.Log(" i died");
     }
 }
