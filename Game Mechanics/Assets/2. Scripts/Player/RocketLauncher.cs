@@ -48,12 +48,7 @@ public class RocketLauncher : MonoBehaviour
 
     private void RocketLauncherLookAt()
     {
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out rocketLauncherLookRayHit))
-        {
-            transform.LookAt(rocketLauncherLookRayHit.point);
-        }
-        else
-            transform.LookAt(lookAtPoint);
+        transform.LookAt(lookAtPoint.position);
     }
 
     private void Fire()

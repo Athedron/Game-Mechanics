@@ -7,7 +7,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
     public float explosionLifeTime = 0.25f;
     public int missileDamage = 25;
     public float explosionForce = 50f;
-    public float playerExplosionMultiplier = 5f;
+    public float playerExplosionForce = 1250f;
 
     private float radius;
 
@@ -24,21 +24,16 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
             damagable.TakeDamage(missileDamage);
 
         // Knockback
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider hit in colliders)
+        if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
-            // TODO
-            if (hit.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            if (other.tag == "Player")
             {
-                if (other.tag == "Player")
-                {
-                    explosionForce *= playerExplosionMultiplier;
-                }
-                // add explosion knockback
-                rb.AddExplosionForce(explosionForce, transform.position, radius, 3f);
-
-                Debug.Log(explosionForce);
+                rb.AddExplosionForce(playerExplosionForce, transform.position, radius, 3f);
             }
+            else
+            {
+                rb.AddExplosionForce(explosionForce, transform.position, radius, 3f);
+            }                
         }
     }
 
