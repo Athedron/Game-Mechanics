@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour, IDamagable
 {
@@ -39,6 +40,7 @@ public class CharacterController : MonoBehaviour, IDamagable
 
     [Header("Stats")]
     public int health = 80;
+    public int maxHealth = 80;
 
 
     void Start()
@@ -134,11 +136,15 @@ public class CharacterController : MonoBehaviour, IDamagable
     public void TakeDamage(int damage)
     {
         health -= damage;
-        Debug.Log("Personal Oof");
+
+        transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (float)health / maxHealth;
+
+        if (health <= 0)
+            GameStateManager.Instance.LoseCondition(0);
     }
-    
+
     public void Die()
     {
-        Debug.Log(" i died");
+
     }
 }
