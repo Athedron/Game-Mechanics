@@ -12,6 +12,8 @@ public class MeleeEnemy : Enemy
     {
         base.Start();
 
+        attackCooldown = 2;
+
         agent.speed = Random.Range(minMeleeSpeed, maxMeleeSpeed);
     }
     
@@ -19,4 +21,21 @@ public class MeleeEnemy : Enemy
     {
         base.Update();
     }
+
+    /*public void AttackTarget(GameObject attackingTarget)
+    {
+        if (canAttack)
+        {
+            canAttack = false;
+            StartCoroutine(Attack(enemyDamage, attackingTarget));
+        }
+    }
+
+    IEnumerator Attack(int enemyDamage, GameObject target)
+    {
+        // attack
+        Debug.Log("zug zug melee attack: " + target.name + " for: " + enemyDamage + " damage");
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+    }*/
 }

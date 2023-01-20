@@ -8,7 +8,7 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance;
     [HideInInspector] public CharacterController player;
-    [HideInInspector] public Base baseObject;
+    [HideInInspector] public Ship baseObject;
 
     public GameObject playerUi;
     
@@ -23,12 +23,14 @@ public class GameStateManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()
     {
         player = FindObjectOfType<CharacterController>();
-        baseObject = FindObjectOfType<Base>();
+        baseObject = FindObjectOfType<Ship>();
     }
 
     public void WinCondition()

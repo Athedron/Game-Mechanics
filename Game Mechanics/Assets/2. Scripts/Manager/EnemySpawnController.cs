@@ -7,8 +7,8 @@ public class EnemySpawnController : MonoBehaviour
 {
     public static EnemySpawnController Instance;
 
-    private GameObject meleeEnemy;
-    private GameObject rangedEnemy;
+    [HideInInspector] public GameObject meleeEnemy;
+    [HideInInspector] public GameObject rangedEnemy;
 
     private List<GameObject> enemies = new List<GameObject>();
     private List<Transform> spawnList = new List<Transform>();
@@ -44,6 +44,8 @@ public class EnemySpawnController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void Start()
@@ -55,7 +57,6 @@ public class EnemySpawnController : MonoBehaviour
         enemies.Add(rangedEnemy);
 
         waveNumber = 1;
-        StartCoroutine(StartNewWave());
 
         waveNumberTmp.text = "Wave: " + waveNumber + " / " + maxWaves;
     }

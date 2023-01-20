@@ -137,7 +137,7 @@ public class CharacterController : MonoBehaviour, IDamagable
     {
         health -= damage;
 
-        transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (float)health / maxHealth;
+        UpdateHealthBar();
 
         if (health <= 0)
             GameStateManager.Instance.LoseCondition(0);
@@ -146,5 +146,25 @@ public class CharacterController : MonoBehaviour, IDamagable
     public void Die()
     {
 
+    }
+
+    public void UpdateHealthBar()
+    {
+        var healthBar = transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+
+        healthBar.fillAmount = (float)health / maxHealth;
+
+        if (healthBar.fillAmount < 0.2f)
+        {
+            healthBar.color = Color.red;
+        }
+        else if (healthBar.fillAmount < 0.4f)
+        {
+            healthBar.color = Color.yellow;
+        }
+        else
+        {
+            healthBar.color = Color.green;
+        }
     }
 }

@@ -16,6 +16,13 @@ public class Missile : MonoBehaviour, ISelfDestructable
         missileRb = GetComponent<Rigidbody>();
         Invoke(nameof(SelfDestruct), missileLifeTime);
     }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag != "Player")
+        {
+            SelfDestruct();
+        }
+    }
 
     void Update()
     {
@@ -25,18 +32,16 @@ public class Missile : MonoBehaviour, ISelfDestructable
     private void MissileMovement()
     {
         missileRb.AddForce(transform.forward * missileSpeed, ForceMode.Force);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag != "Player")
-        {
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            SelfDestruct();
-        }
-    }
+    }    
 
     public void SelfDestruct()
     {
+        Explode();
         Destroy(gameObject);
+    }
+
+    public void Explode()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
     }
 }

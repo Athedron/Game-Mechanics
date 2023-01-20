@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Base : MonoBehaviour, IDamagable
+public class Ship : MonoBehaviour, IDamagable
 {
     public int health;
 
