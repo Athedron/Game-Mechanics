@@ -234,20 +234,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6591f0adc70b1748b6f3d2f9d99dc1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 65
+  health: 150
   enemyDamage: 25
-  attackCooldown: 2
+  attackCooldown: 0.7
   endPoint: {fileID: 0}
   agent: {fileID: 0}
   canAttack: 0
+  inAggroRange: 0
   attackRange: {fileID: 0}
   aggroRange: {fileID: 0}
+  calcSpeed: 0
   target: 0
+  attackTarget: {fileID: 0}
   player: {fileID: 0}
   ship: {fileID: 0}
   tower: {fileID: 0}
-  minMeleeSpeed: 2
-  maxMeleeSpeed: 4
+  isCoroutingRunning: 0
+  coin: {fileID: 0}
+  healthPack: {fileID: 0}
+  minMeleeSpeed: 4
+  maxMeleeSpeed: 8
+  hammer: {fileID: 0}
+  dropsHealth: 0
 --- !u!195 &-2336623256435182700
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -294,7 +302,6 @@ GameObject:
   - component: {fileID: 7404470503532353083}
   - component: {fileID: 3598937972822532557}
   - component: {fileID: 5142405825325805188}
-  - component: {fileID: 236016706469083229}
   m_Layer: 0
   m_Name: handle
   m_TagString: Enemy
@@ -367,19 +374,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &236016706469083229
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5950502392001474129}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 0.9999999, z: 1.0000001}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7642966158871271752
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +418,6 @@ GameObject:
   - component: {fileID: 175580263250996444}
   - component: {fileID: 3952834967987750991}
   - component: {fileID: 2809814107654483140}
-  - component: {fileID: 6288152249772515056}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Enemy
@@ -497,16 +490,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6288152249772515056
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952657866340789413}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 0.9999999, z: 1.0000001}
-  m_Center: {x: 0, y: 0, z: 0}

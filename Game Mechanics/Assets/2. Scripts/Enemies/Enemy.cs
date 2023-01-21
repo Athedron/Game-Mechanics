@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour, IDamagable
+public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 {
     public int health;
     public int enemyDamage;
-    public int attackCooldown;
+    public float attackCooldown;
 
     public Transform endPoint;
     public NavMeshAgent agent;
@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour, IDamagable
     public bool inAggroRange = false;
     public GameObject attackRange;
     public GameObject aggroRange;
+    [HideInInspector] public float calcSpeed;
 
     public enum Targets
     { 
@@ -36,6 +37,10 @@ public class Enemy : MonoBehaviour, IDamagable
     [HideInInspector]public Coroutine attackCoroutine;
     [HideInInspector] public bool isCoroutingRunning;
 
+    [Header("Item Drops")]
+    public GameObject coin;
+    public GameObject healthPack;
+
     public virtual void Start()
     {
         endPoint = GameObject.FindGameObjectWithTag("EndPoint").transform;
@@ -46,10 +51,14 @@ public class Enemy : MonoBehaviour, IDamagable
         aggroRange = transform.GetChild(0).gameObject;
         attackRange = transform.GetChild(1).gameObject;
 
+        coin = Resources.Load("Items/Coin") as GameObject;
+        healthPack = Resources.Load("Items/HealthPack") as GameObject;
+
+        target = Targets.SHIP;
         attackTarget = ship;
     }
 
-    public virtual void Update()
+    public virtual void FixedUpdate()
     {
         UpdateTarget();
     }
@@ -64,13 +73,10 @@ public class Enemy : MonoBehaviour, IDamagable
 
     public void Die()
     {
-        EnemySpawnController.Instance.amountOfEnemiesAlive--;
-
-        if (EnemySpawnController.Instance.amountOfEnemiesAlive == 0)
-            EnemySpawnController.Instance.StartCoroutine(EnemySpawnController.Instance.StartNewWave());
+        EnemySpawnController.Instance.m_EnemyDied.Invoke();
 
         // TODO spawn health pack and maybe coins
-
+        SpawnItem();
         Destroy(gameObject);
     }
 
@@ -152,5 +158,10 @@ public class Enemy : MonoBehaviour, IDamagable
     public virtual IEnumerator Attack(int enemyDamage, GameObject target)
     {
         yield return null;   
+    }
+
+    public virtual void SpawnItem()
+    {
+
     }
 }

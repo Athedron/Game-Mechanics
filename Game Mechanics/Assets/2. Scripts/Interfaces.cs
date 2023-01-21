@@ -16,5 +16,5 @@ public interface IDamagable
 
 public interface ISelfDestructable 
 {
-    void SelfDestruct();
+    void SpawnItem();
 }

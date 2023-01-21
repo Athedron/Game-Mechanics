@@ -44,7 +44,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1517980711937931882
 MonoBehaviour:
@@ -102,7 +102,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 7
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4288800501170596102
 MonoBehaviour:
@@ -218,7 +218,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -234,21 +234,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3630b7b6c586e904fabbd9ac277ceedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 35
-  enemyDamage: 35
+  health: 100
+  enemyDamage: 50
   attackCooldown: 3
   endPoint: {fileID: 0}
   agent: {fileID: 0}
   canAttack: 0
+  inAggroRange: 0
   attackRange: {fileID: 0}
   aggroRange: {fileID: 0}
+  calcSpeed: 0
   target: 0
+  attackTarget: {fileID: 0}
   player: {fileID: 0}
   ship: {fileID: 0}
   tower: {fileID: 0}
-  minRangedSpeed: 1
-  maxRangedSpeed: 2
+  isCoroutingRunning: 0
+  coin: {fileID: 0}
+  healthPack: {fileID: 0}
+  minRangedSpeed: 2
+  maxRangedSpeed: 4
   enemyProjectileSpeed: 20
+  coinAmount: 0
 --- !u!195 &8146337611642381072
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -291,21 +298,45 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6978845595526532910}
     m_Modifications:
+    - target: {fileID: 1732974046026904932, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1750802906366242047, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_Name
       value: Projectile
       objectReference: {fileID: 0}
     - target: {fileID: 1750802906366242047, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1750802906366242047, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4520741436874383376, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7281931242029901359, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.84631085
+      objectReference: {fileID: 0}
+    - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.058534294
+      objectReference: {fileID: 0}
+    - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.84631085
       objectReference: {fileID: 0}
     - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -313,7 +344,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.75
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 8938067103997709035, guid: 1c08c47d55a4b4047970cd5c0a9639c8, type: 3}
       propertyPath: m_LocalPosition.z

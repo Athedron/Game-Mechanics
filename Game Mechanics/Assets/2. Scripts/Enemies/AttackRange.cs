@@ -27,8 +27,6 @@ public class AttackRange : MonoBehaviour
                 enemyScript.canAttack = false;
             }
         }
-
-        Debuging(other);
     }
 
     private void OnTriggerExit(Collider other)
@@ -44,8 +42,6 @@ public class AttackRange : MonoBehaviour
 
             enemyScript.isCoroutingRunning = false;
         }
-
-        Debuging(other);
     }
 
     public void Debuging(Collider other)

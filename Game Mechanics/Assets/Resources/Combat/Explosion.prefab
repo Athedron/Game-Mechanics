@@ -4873,6 +4873,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionLifeTime: 0.5
-  missileDamage: 25
+  missileDamage: 50
   explosionForce: 100
   playerExplosionForce: 1000

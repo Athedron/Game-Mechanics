@@ -8,34 +8,66 @@ public class MeleeEnemy : Enemy
     public float minMeleeSpeed;
     public float maxMeleeSpeed;
 
+
+    [HideInInspector] public Transform hammer;
+    private Vector3 hammerStartPos;
+
+    public bool dropsHealth;
+
     public override void Start()
     {
         base.Start();
+        calcSpeed = Random.Range(minMeleeSpeed, maxMeleeSpeed);
+        agent.speed = calcSpeed;
+        hammer = transform.GetChild(2);
+        hammerStartPos = hammer.localPosition;
 
-        attackCooldown = 2;
-
-        agent.speed = Random.Range(minMeleeSpeed, maxMeleeSpeed);
+        HealthPackDropCalc();
     }
     
-    public override void Update()
+    public override void FixedUpdate()
     {
-        base.Update();
-    }
+        base.FixedUpdate();
 
-    /*public void AttackTarget(GameObject attackingTarget)
-    {
         if (canAttack)
-        {
-            canAttack = false;
-            StartCoroutine(Attack(enemyDamage, attackingTarget));
-        }
+            HammerHitAnim();
+        else
+            ResetHammerPos();
     }
 
-    IEnumerator Attack(int enemyDamage, GameObject target)
+    public override IEnumerator Attack(int enemyDamage, GameObject target)
     {
-        // attack
-        Debug.Log("zug zug melee attack: " + target.name + " for: " + enemyDamage + " damage");
+        isCoroutingRunning = true;
+
+        base.Attack(enemyDamage, target);
+
+        if (target.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
+            damagable.TakeDamage(enemyDamage);
+
         yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
-    }*/
+
+        isCoroutingRunning = false;
+    }
+
+    public void HammerHitAnim()
+    {
+        hammer.transform.localPosition += transform.forward * Mathf.Sin(Time.time * 10f) * 0.2f;
+    }
+
+    public void ResetHammerPos()
+    {
+        hammer.localPosition = hammerStartPos;
+    }
+
+    public override void SpawnItem()
+    {
+        if (dropsHealth)
+            Instantiate(healthPack, transform.position, Quaternion.identity);
+    }
+
+    public void HealthPackDropCalc()
+    {
+        if ((int)Random.Range(0f, 5f) == 1)
+            dropsHealth = true;
+    }
 }

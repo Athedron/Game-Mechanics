@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using TMPro;
 
 public class CharacterController : MonoBehaviour, IDamagable
 {
@@ -41,6 +43,11 @@ public class CharacterController : MonoBehaviour, IDamagable
     [Header("Stats")]
     public int health = 80;
     public int maxHealth = 80;
+    public int coins = 0;
+
+    [Header("UI")]
+    public TMP_Text coinNumberTmp;
+    
 
 
     void Start()
@@ -49,6 +56,8 @@ public class CharacterController : MonoBehaviour, IDamagable
        
         playerRb = GetComponent<Rigidbody>();
         playerRb.freezeRotation = true;
+
+        UpdateHealthBar();
     }
 
     private void Update()
@@ -140,12 +149,12 @@ public class CharacterController : MonoBehaviour, IDamagable
         UpdateHealthBar();
 
         if (health <= 0)
-            GameStateManager.Instance.LoseCondition(0);
+            Die();
     }
 
     public void Die()
     {
-
+        GameStateManager.Instance.LoseCondition(0);
     }
 
     public void UpdateHealthBar()
@@ -154,11 +163,11 @@ public class CharacterController : MonoBehaviour, IDamagable
 
         healthBar.fillAmount = (float)health / maxHealth;
 
-        if (healthBar.fillAmount < 0.2f)
+        if (healthBar.fillAmount < 0.25f)
         {
             healthBar.color = Color.red;
         }
-        else if (healthBar.fillAmount < 0.4f)
+        else if (healthBar.fillAmount < 0.5f)
         {
             healthBar.color = Color.yellow;
         }
@@ -166,5 +175,11 @@ public class CharacterController : MonoBehaviour, IDamagable
         {
             healthBar.color = Color.green;
         }
+    }
+
+    public void UpdateCoinAmount(int coinAmount)
+    {
+        coins += coinAmount;
+        coinNumberTmp.text = "Coins: " + coins;
     }
 }

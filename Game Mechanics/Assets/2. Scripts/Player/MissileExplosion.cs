@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class MissileExplosion : MonoBehaviour, ISelfDestructable
 {
-    public float explosionLifeTime = 0.25f;
-    public int missileDamage = 25;
-    public float explosionForce = 50f;
-    public float playerExplosionForce = 1250f;
+    public float explosionLifeTime;
+    public int missileDamage;
+    public float explosionForce;
+    public float playerExplosionForce;
 
     private float radius;
 
     void Start()
     {
-        Invoke(nameof(SelfDestruct), explosionLifeTime);
+        Invoke(nameof(SpawnItem), explosionLifeTime);
         radius = GetComponent<SphereCollider>().radius;
     }
 
@@ -21,7 +21,17 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
     {
         // Take damage
         if (other.TryGetComponent<IDamagable>(out IDamagable damagable))
+        {
+            if (other.TryGetComponent<CharacterController>(out CharacterController player))
+            {
+                missileDamage = (int)(missileDamage * 0.2f);
+            }
+
             damagable.TakeDamage(missileDamage);
+        }
+
+            
+       
 
         // Knockback
         if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
@@ -37,7 +47,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
         }
     }
 
-    public void SelfDestruct()
+    public void SpawnItem()
     {
         Destroy(gameObject);
     }

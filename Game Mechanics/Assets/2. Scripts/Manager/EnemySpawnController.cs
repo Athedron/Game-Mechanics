@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class EnemySpawnController : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class EnemySpawnController : MonoBehaviour
     private int amountOfEnemies;
     public int amountOfEnemiesAlive;
 
+    public bool levelStarted;
+    public int startAmountOffEnemies;
+
     [InspectorButton("OnButtonClicked")]
     public bool spawnWave;
 
@@ -28,10 +32,12 @@ public class EnemySpawnController : MonoBehaviour
 
     public TMP_Text waveNumberTmp;
 
+    public UnityEvent m_EnemyDied;
+
 
     private void OnButtonClicked()
     {
-        SpawnWave();
+        StartLevel();
     }
 
     private void Awake()
@@ -56,9 +62,30 @@ public class EnemySpawnController : MonoBehaviour
         enemies.Add(meleeEnemy);
         enemies.Add(rangedEnemy);
 
-        waveNumber = 1;
+        if (m_EnemyDied == null)
+            m_EnemyDied = new UnityEvent();
 
-        waveNumberTmp.text = "Wave: " + waveNumber + " / " + maxWaves;
+        m_EnemyDied.AddListener(UpdateEnemyAmount);
+    }
+
+
+    public void StartLevel()
+    {
+        levelStarted = true;
+
+        waveNumberTmp.gameObject.SetActive(true);
+        
+        waveNumber = 1;
+        amountOfEnemiesAlive = 0;
+
+        StartCoroutine(StartNewWave());
+    }
+
+    public IEnumerator StartNewWave()
+    {
+        ResetForNextWave();
+        yield return new WaitForSeconds(spawnWaveInterval);
+        SpawnWave();
     }
 
     public void SpawnWave()
@@ -66,7 +93,7 @@ public class EnemySpawnController : MonoBehaviour
         if (waveNumber == maxWaves)
             GameStateManager.Instance.WinCondition();
 
-        amountOfEnemies = 1 + (int)(rampUpSpeed * Mathf.Pow(waveNumber, 2f));
+        amountOfEnemies = startAmountOffEnemies + (int)(rampUpSpeed * Mathf.Pow(waveNumber, 2f));
 
         if (amountOfEnemies >= spawnList.Count)
             amountOfEnemies = spawnList.Count;
@@ -77,13 +104,6 @@ public class EnemySpawnController : MonoBehaviour
 
         waveNumberTmp.text = "Wave: " + waveNumber + " / " + maxWaves;
         waveNumber++;
-    }
-
-    public IEnumerator StartNewWave()
-    {
-        ResetForNextWave();
-        yield return new WaitForSeconds(spawnWaveInterval);
-        SpawnWave();
     }
 
     public void SpawnEnemies(int enemyAmount)
@@ -121,5 +141,13 @@ public class EnemySpawnController : MonoBehaviour
         {
             spawnList.Add(spawnPoint);
         }
+    }
+
+    public void UpdateEnemyAmount()
+    {
+        amountOfEnemiesAlive--;
+
+        if (levelStarted && amountOfEnemiesAlive <= 0 && levelStarted)
+            StartCoroutine(StartNewWave());
     }
 }

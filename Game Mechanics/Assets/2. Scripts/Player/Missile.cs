@@ -14,13 +14,13 @@ public class Missile : MonoBehaviour, ISelfDestructable
     {
         explosionPrefab = Resources.Load<GameObject>("Combat/Explosion");
         missileRb = GetComponent<Rigidbody>();
-        Invoke(nameof(SelfDestruct), missileLifeTime);
+        Invoke(nameof(SpawnItem), missileLifeTime);
     }
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag != "Player")
         {
-            SelfDestruct();
+            SpawnItem();
         }
     }
 
@@ -34,7 +34,7 @@ public class Missile : MonoBehaviour, ISelfDestructable
         missileRb.AddForce(transform.forward * missileSpeed, ForceMode.Force);
     }    
 
-    public void SelfDestruct()
+    public void SpawnItem()
     {
         Explode();
         Destroy(gameObject);

@@ -12,21 +12,25 @@ public class RangedEnemy : Enemy
 
     public float enemyProjectileSpeed;
 
+    public int coinAmount;
+
     public override void Start()
     {
         base.Start();
 
-        attackCooldown = 3;
-
-        agent.speed = Random.Range(minRangedSpeed, maxRangedSpeed);
+        calcSpeed = Random.Range(minRangedSpeed, maxRangedSpeed);
+        agent.speed = calcSpeed;
 
         rangedEnemyProjectile = Resources.Load("Enemies/EnemyProjectile") as GameObject;
         offset = new Vector3(0f, 2.2f, 0f);
+
+        if (coinAmount == 0)
+            CoinAmountCalc();
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
     }
 
     public override IEnumerator Attack(int enemyDamage, GameObject target)
@@ -40,11 +44,26 @@ public class RangedEnemy : Enemy
         projectile.GetComponent<EnemyProjectile>().enemyProjectileDamage = enemyDamage;
         projectile.GetComponent<EnemyProjectile>().enemyProjectileSpeed = enemyProjectileSpeed;
 
+        agent.speed = 0;
+
         yield return new WaitForSeconds(attackCooldown);
 
-        Debug.Log("coroutine is niet gestopt");
-
+        agent.speed = calcSpeed;
 
         isCoroutingRunning = false;
+    }
+
+    public override void SpawnItem()
+    {
+        var coinTmp = Instantiate(coin, transform.position, Quaternion.identity);
+        coinTmp.GetComponent<CoinBehaviour>().coinAmount = coinAmount;
+    }
+
+    public void CoinAmountCalc()
+    {
+        if ((int)Random.Range(0f, 50f) == 1)
+            coinAmount = 5;
+        else
+            coinAmount = 1;
     }
 }
