@@ -53,6 +53,7 @@ public class Ship : MonoBehaviour, IDamagable
     public void PassiveHeal()
     {
         health += healAmount;
+
         if (health > maxHealth)
             health = maxHealth;
 
