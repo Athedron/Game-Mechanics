@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
     public bool canAttack = false;
     public bool inAggroRange = false;
+    private bool hasDied = false;
     public GameObject attackRange;
     public GameObject aggroRange;
     [HideInInspector] public float calcSpeed;
@@ -32,9 +33,11 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
     public GameObject ship;
     
     // TBC
+    public List<GameObject> towers = new List<GameObject>();
+    public GameObject[] towersArray = new GameObject[4];
     public GameObject tower;
 
-    [HideInInspector]public Coroutine attackCoroutine;
+    [HideInInspector] public Coroutine attackCoroutine;
     [HideInInspector] public bool isCoroutingRunning;
 
     [Header("Item Drops")]
@@ -54,8 +57,9 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
         coin = Resources.Load("Items/Coin") as GameObject;
         healthPack = Resources.Load("Items/HealthPack") as GameObject;
 
-        target = Targets.SHIP;
-        attackTarget = ship;
+        ChangeTarget(ship);
+
+        towersArray = GameObject.FindGameObjectsWithTag("Tower");
     }
 
     public virtual void FixedUpdate()
@@ -67,15 +71,22 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
     {
         health -= damage;
 
-        if (health <= 0)
+        if (health <= 0 && !hasDied)
             Die();
     }
 
     public void Die()
     {
+        hasDied = true;
+
+        foreach (GameObject tower in towersArray)
+        {
+            var towerScript = tower.GetComponent<Tower>();
+            towerScript.LostEnemy(gameObject);
+        }
+
         EnemySpawnController.Instance.m_EnemyDied.Invoke();
 
-        // TODO spawn health pack and maybe coins
         SpawnItem();
         Destroy(gameObject);
     }
@@ -88,8 +99,9 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
     public void ChangeTarget(GameObject collisionTarget)
     {
-        if (collisionTarget == tower)
+        if (TowerCheck(collisionTarget))
         {
+            tower = collisionTarget;
             target = Targets.TOWER;
         }
         else if (collisionTarget == ship)
@@ -99,7 +111,7 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
         else if (collisionTarget == player)
         {
             if (collisionTarget.transform.position.y - transform.position.y >= 9f &&
-                gameObject != EnemySpawnController.Instance.rangedEnemy)
+                gameObject.TryGetComponent<MeleeEnemy>(out MeleeEnemy melee))
             {
                 target = Targets.SHIP;
                 return;
@@ -109,6 +121,15 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
                 target = Targets.PLAYER;
             }
         }
+    }
+
+    private bool TowerCheck(GameObject possibleTower)
+    {
+        if (towers.Contains(possibleTower))
+        {
+            return true;
+        }
+        else return false;
     }
 
 
@@ -138,7 +159,13 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
                 break;
             case Targets.TOWER:
-                // add tower attack and lookat for range enemies
+                MoveToTarget(tower, tower.transform);
+                attackTarget = tower;
+
+                if (canAttack)
+                {
+                    AttackTarget(tower);
+                }
 
                 break;
             default:

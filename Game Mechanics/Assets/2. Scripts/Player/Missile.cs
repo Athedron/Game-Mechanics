@@ -7,6 +7,7 @@ public class Missile : MonoBehaviour, ISelfDestructable
     private Rigidbody missileRb;
     [HideInInspector] public float missileSpeed;
     public float missileLifeTime;
+    [HideInInspector]public Vector3 target;
 
     private GameObject explosionPrefab;
 
@@ -18,20 +19,21 @@ public class Missile : MonoBehaviour, ISelfDestructable
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag != "Player")
+        if (other.gameObject.tag != "Player" || other.gameObject.tag == "EnemyParent" || other.gameObject.tag == "Environment")
         {
             SpawnItem();
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         MissileMovement();
     }
 
     private void MissileMovement()
     {
-        missileRb.AddForce(transform.forward * missileSpeed, ForceMode.Force);
+        transform.position = Vector3.MoveTowards(transform.position, target, missileSpeed * Time.deltaTime);
+        //missileRb.AddForce(transform.forward * missileSpeed, ForceMode.Force);
     }    
 
     public void SpawnItem()
@@ -42,6 +44,7 @@ public class Missile : MonoBehaviour, ISelfDestructable
 
     public void Explode()
     {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        if (explosionPrefab != null)
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
     }
 }

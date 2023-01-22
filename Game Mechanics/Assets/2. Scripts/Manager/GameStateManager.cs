@@ -11,7 +11,15 @@ public class GameStateManager : MonoBehaviour
     [HideInInspector] public Ship baseObject;
 
     public GameObject playerUi;
-    
+
+    public TowerEco[] towerEcoObjs = new TowerEco[4];
+
+    public bool levelStarted = false;
+
+    public int waveTimer;
+    public int waveTimerIntermission;
+    public int timer;
+
 
     private void Awake()
     {
@@ -31,6 +39,8 @@ public class GameStateManager : MonoBehaviour
     {
         player = FindObjectOfType<CharacterController>();
         baseObject = FindObjectOfType<Ship>();
+
+        towerEcoObjs = FindObjectsOfType<TowerEco>(true);
     }
 
     public void WinCondition()
@@ -63,8 +73,6 @@ public class GameStateManager : MonoBehaviour
                                                                           + EnemySpawnController.Instance.maxWaves;
     }
 
-
-
     public void RestartLevel()
     {
         Time.timeScale = 1;
@@ -82,5 +90,53 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 1;
         //SceneManager.LoadScene(0);
         Debug.Log("go to main menu boop boop");
+    }
+    
+    public void EnableTowerEcos()
+    {
+        foreach (TowerEco towerEco in towerEcoObjs)
+        {
+            towerEco.gameObject.SetActive(true);
+            towerEco.enabled = true;
+            towerEco.StartCoroutine(towerEco.LookAt());
+        }
+    }
+
+    public void StartLevel()
+    {
+        StartCoroutine(CountDown(waveTimer));
+    }
+    
+    public void StartWave()
+    {
+        if (EnemySpawnController.Instance.waveNumber == 4 || 
+            EnemySpawnController.Instance.waveNumber == 7 ||
+            EnemySpawnController.Instance.waveNumber == 10)
+            StartCoroutine(CountDown(waveTimerIntermission));
+        else
+            StartCoroutine(CountDown(waveTimer));
+    }
+
+    public IEnumerator CountDown(int timerDuration)
+    {
+        timer = timerDuration;
+        playerUi.transform.GetChild(5).gameObject.SetActive(true);
+
+        while (timer > 0)
+        {
+            playerUi.transform.GetChild(5).GetComponent<TMP_Text>().text = "" + timer;
+            yield return new WaitForSeconds(1);
+            timer--;
+        }
+
+        playerUi.transform.GetChild(5).gameObject.SetActive(false);
+
+        if (!levelStarted)
+        {
+            EnemySpawnController.Instance.StartLevel();
+            levelStarted = true;
+        }
+        else
+            EnemySpawnController.Instance.StartCoroutine(EnemySpawnController.Instance.StartNewWave());
     }
 }

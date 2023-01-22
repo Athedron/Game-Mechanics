@@ -27,9 +27,9 @@ public class CoinBehaviour : Item
         }
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         if (coinAmount > 1 && !isScaled)
             m_CoinScaler.Invoke();

@@ -7,7 +7,7 @@ public class AggroRange : MonoBehaviour
     Enemy enemyScript;
     bool inRangeOffShip;
 
-    private GameObject currentTarget;
+    public GameObject currentTarget;
     private GameObject newTarget;
 
     private void Start()
@@ -25,45 +25,61 @@ public class AggroRange : MonoBehaviour
         {
             if (other.gameObject == enemyScript.ship)
             {
-                //currentTarget = enemyScript.ship;
+                currentTarget = enemyScript.ship;
                 enemyScript.ChangeTarget(enemyScript.ship);
             }
-            else if (gameObject.TryGetComponent<RangedEnemy>(out RangedEnemy rangedEnemy) &&
-                     other.gameObject == enemyScript.tower)
+            else if (gameObject.GetComponentInParent<RangedEnemy>() && 
+                     other.gameObject.tag == "Tower" && TargetsTower())
             {
-                //currentTarget = enemyScript.tower;
-                enemyScript.ChangeTarget(enemyScript.tower);
+                currentTarget = enemyScript.tower;
+                enemyScript.towers.Add(other.gameObject);
+                enemyScript.ChangeTarget(PickClosestTower());
             }
-            else if (other.gameObject == enemyScript.player)
+            else if (other.gameObject == enemyScript.player && currentTarget == other.gameObject)
             {
-                //currentTarget = enemyScript.player;
+                currentTarget = enemyScript.player;
                 enemyScript.ChangeTarget(enemyScript.player);
             }
         }
     }
 
+    private bool TargetsTower()
+    {
+        if ((int)Random.Range(0f, 4f) == 1)
+            return true;
+        else
+            return false;
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" ||
+        if (/*other.gameObject.tag == "Player" ||*/
             other.gameObject.tag == "EndPoint" ||
             other.gameObject.tag == "Tower")
         {
             currentTarget = other.gameObject;
 
-            if (other.gameObject == enemyScript.ship)
+            if (currentTarget == enemyScript.ship)
             {
                 enemyScript.ChangeTarget(enemyScript.ship);
             }
-            else  if (gameObject.TryGetComponent<RangedEnemy>(out RangedEnemy rangedEnemy) &&
-                      other.gameObject == enemyScript.tower)
+            else  if (gameObject.GetComponentInParent<RangedEnemy>() &&
+                      currentTarget != enemyScript.tower)
             {
-                enemyScript.ChangeTarget(enemyScript.tower);
+                enemyScript.ChangeTarget(PickClosestTower());
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (enemyScript.towers.Count != 0)
+        {
+            enemyScript.ChangeTarget(enemyScript.ship);
+            currentTarget = null;
+        }
+        
+
         if (other.gameObject == enemyScript.player)
         {
             enemyScript.ChangeTarget(enemyScript.ship);
@@ -79,6 +95,13 @@ public class AggroRange : MonoBehaviour
         if (currentTarget == enemyScript.ship)
             return;
 
+        if (enemyScript.towers.Count != 0)
+        {
+            enemyScript.ChangeTarget(ATower(currentTarget));
+            return;
+        }
+
+
         if ((Vector3.Distance(transform.position, enemyScript.endPoint.position) >
             Vector3.Distance(enemyScript.player.transform.position, enemyScript.endPoint.position)) &&
             currentTarget == enemyScript.player)
@@ -86,11 +109,47 @@ public class AggroRange : MonoBehaviour
             enemyScript.ChangeTarget(enemyScript.player);
         }
 
-        if ((Vector3.Distance(transform.position, enemyScript.endPoint.position) <
+        if ((Vector3.Distance(enemyScript.transform.position, enemyScript.endPoint.position) <
             Vector3.Distance(enemyScript.player.transform.position, enemyScript.endPoint.position)) &&
             currentTarget != enemyScript.ship)
         {
             enemyScript.ChangeTarget(enemyScript.ship);
         }        
+    }
+
+    private GameObject ATower(GameObject curTarget)
+    {
+        if (enemyScript.towers.Contains(curTarget))
+        {
+            return curTarget;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public GameObject PickClosestTower()
+    {
+        GameObject closestTower = null;
+        float closestDistance = 0f;
+        bool first = true;
+
+        foreach (GameObject tower in enemyScript.towers)
+        {
+            float distance = Vector3.Distance(tower.transform.position, transform.position);
+
+            if (first)
+            {
+                closestDistance = distance;
+                first = false;
+            }
+            else if (distance < closestDistance)
+            {
+                closestTower = tower;
+                closestDistance = distance;
+            }
+        }
+        return closestTower;
     }
 }

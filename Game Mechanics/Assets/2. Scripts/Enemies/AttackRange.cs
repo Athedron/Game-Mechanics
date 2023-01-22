@@ -31,9 +31,9 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player" ||
+        if ((other.gameObject.tag == "Player" ||
             other.gameObject.tag == "EndPoint" ||
-            other.gameObject.tag == "Tower")
+            other.gameObject.tag == "Tower") && enemyScript.attackTarget == other.gameObject)
         {
             enemyScript.canAttack = false;
 

@@ -44,7 +44,11 @@ public class MeleeEnemy : Enemy
         if (target.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
             damagable.TakeDamage(enemyDamage);
 
+        agent.speed = 0;
+
         yield return new WaitForSeconds(attackCooldown);
+
+        agent.speed = calcSpeed;
 
         isCoroutingRunning = false;
     }

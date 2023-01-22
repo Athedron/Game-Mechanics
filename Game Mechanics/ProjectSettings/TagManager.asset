@@ -8,6 +8,10 @@ TagManager:
   - EndPoint
   - Environment
   - Enemy
+  - EnemyParent
+  - TowerRange
+  - Tower
+  - PlayerUi
   layers:
   - Default
   - TransparentFX

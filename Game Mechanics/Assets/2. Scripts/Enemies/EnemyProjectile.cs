@@ -19,7 +19,9 @@ public class EnemyProjectile : MonoBehaviour
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag != "Enemy")
+        if (other.gameObject.tag == "Player" ||
+            other.gameObject.tag == "EndPoint" ||
+            other.gameObject.tag == "Tower")
         {
             if (other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
                 damagable.TakeDamage(enemyProjectileDamage);

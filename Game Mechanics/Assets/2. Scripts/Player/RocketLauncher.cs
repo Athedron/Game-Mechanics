@@ -25,7 +25,7 @@ public class RocketLauncher : MonoBehaviour
         lookAtPoint = Camera.main.transform.GetChild(0);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         RocketLauncherLookAt();
         HandleInput();
@@ -49,11 +49,27 @@ public class RocketLauncher : MonoBehaviour
     private void RocketLauncherLookAt()
     {
         transform.LookAt(lookAtPoint.position);
+        /*if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity))
+            //transform.LookAt(hit.point);
+            
+        else
+            Debug.Log("oops");
+            //transform.LookAt(lookAtPoint.position);*/
     }
 
     private void Fire()
     {
+        RaycastHit hit;
         GameObject missile = Instantiate(missilePrefab, firePoint.position, transform.rotation);
         missile.GetComponent<Missile>().missileSpeed = missileSpeed;
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity))
+        {
+            missile.GetComponent<Missile>().target = hit.point;
+        }
+        else
+        {
+            missile.GetComponent<Missile>().target = Camera.main.transform.position + Camera.main.transform.forward * 5000f;
+        }
     }
 }

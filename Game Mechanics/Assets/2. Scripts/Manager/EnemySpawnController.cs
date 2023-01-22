@@ -21,7 +21,6 @@ public class EnemySpawnController : MonoBehaviour
     private int amountOfEnemies;
     public int amountOfEnemiesAlive;
 
-    public bool levelStarted;
     public int startAmountOffEnemies;
 
     [InspectorButton("OnButtonClicked")]
@@ -71,12 +70,9 @@ public class EnemySpawnController : MonoBehaviour
 
     public void StartLevel()
     {
-        levelStarted = true;
-
         waveNumberTmp.gameObject.SetActive(true);
         
         waveNumber = 1;
-        amountOfEnemiesAlive = 0;
 
         StartCoroutine(StartNewWave());
     }
@@ -84,13 +80,13 @@ public class EnemySpawnController : MonoBehaviour
     public IEnumerator StartNewWave()
     {
         ResetForNextWave();
-        yield return new WaitForSeconds(spawnWaveInterval);
+        yield return null;//new WaitForSeconds(spawnWaveInterval);
         SpawnWave();
     }
 
     public void SpawnWave()
     {
-        if (waveNumber == maxWaves)
+        if (waveNumber == maxWaves + 1)
             GameStateManager.Instance.WinCondition();
 
         amountOfEnemies = startAmountOffEnemies + (int)(rampUpSpeed * Mathf.Pow(waveNumber, 2f));
@@ -135,6 +131,7 @@ public class EnemySpawnController : MonoBehaviour
 
     public void ResetForNextWave()
     {
+        amountOfEnemiesAlive = 0;
         spawnList.Clear();
 
         foreach (Transform spawnPoint in transform.GetChild(0))
@@ -147,7 +144,10 @@ public class EnemySpawnController : MonoBehaviour
     {
         amountOfEnemiesAlive--;
 
-        if (levelStarted && amountOfEnemiesAlive <= 0 && levelStarted)
-            StartCoroutine(StartNewWave());
+        if (!GameStateManager.Instance.levelStarted && amountOfEnemiesAlive <= 0)
+            GameStateManager.Instance.EnableTowerEcos();
+
+        if (GameStateManager.Instance.levelStarted && amountOfEnemiesAlive <= 0)
+            GameStateManager.Instance.StartWave();
     }
 }

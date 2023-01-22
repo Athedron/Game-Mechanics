@@ -6,7 +6,7 @@ public class Item : MonoBehaviour
 {
     public float rotationSpeed;
 
-    public virtual void Update()
+    public virtual void FixedUpdate()
     {
         RotateAnim();
     }

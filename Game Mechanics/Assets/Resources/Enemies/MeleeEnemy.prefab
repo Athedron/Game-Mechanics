@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4583984704415243539}
   - component: {fileID: 3841411973442172984}
   - component: {fileID: 6774516807405312872}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AttackRange
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6774516807405312872
 MonoBehaviour:
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 4304710885793647037}
   - component: {fileID: 4867336407284809612}
   - component: {fileID: 4737386341514876834}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AggroRange
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -116,6 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c02fa6736a928e4698e35026a07c29e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTarget: {fileID: 0}
 --- !u!1 &4950176090052452312
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +134,7 @@ GameObject:
   - component: {fileID: 6041168304354568473}
   m_Layer: 0
   m_Name: MeleeEnemy
-  m_TagString: Enemy
+  m_TagString: EnemyParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -218,7 +219,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -248,12 +249,18 @@ MonoBehaviour:
   attackTarget: {fileID: 0}
   player: {fileID: 0}
   ship: {fileID: 0}
+  towers: []
+  towersArray:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   tower: {fileID: 0}
   isCoroutingRunning: 0
   coin: {fileID: 0}
   healthPack: {fileID: 0}
-  minMeleeSpeed: 4
-  maxMeleeSpeed: 8
+  minMeleeSpeed: 8
+  maxMeleeSpeed: 9
   hammer: {fileID: 0}
   dropsHealth: 0
 --- !u!195 &-2336623256435182700
@@ -304,7 +311,7 @@ GameObject:
   - component: {fileID: 5142405825325805188}
   m_Layer: 0
   m_Name: handle
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -385,7 +392,7 @@ GameObject:
   - component: {fileID: 8836013710464748376}
   m_Layer: 0
   m_Name: Hammer
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -420,7 +427,7 @@ GameObject:
   - component: {fileID: 2809814107654483140}
   m_Layer: 0
   m_Name: Hammer
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
