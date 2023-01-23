@@ -146,7 +146,7 @@ public class GameStateManager : MonoBehaviour
     {
         Time.timeScale = 1;
         PlayerPrefs.SetInt("TutorialCompleted", 1);
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void MainMenu()
