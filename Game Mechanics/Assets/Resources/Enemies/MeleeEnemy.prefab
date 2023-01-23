@@ -259,8 +259,8 @@ MonoBehaviour:
   isCoroutingRunning: 0
   coin: {fileID: 0}
   healthPack: {fileID: 0}
-  minMeleeSpeed: 8
-  maxMeleeSpeed: 9
+  minMeleeSpeed: 9
+  maxMeleeSpeed: 10
   hammer: {fileID: 0}
   dropsHealth: 0
 --- !u!195 &-2336623256435182700
@@ -277,13 +277,13 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 0.99999994
   m_BaseOffset: 0.49999997
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!65 &6041168304354568473
 BoxCollider:
@@ -323,14 +323,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5950502392001474129}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.86, y: 0.342, z: 0.101}
-  m_LocalScale: {x: 0.15811, y: 1, z: 0.1649416}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.86, y: 0.597, z: 0.101}
+  m_LocalScale: {x: 2.136165, y: 1.1272541, z: 1.5834}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8836013710464748376}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &3598937972822532557
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -338,7 +338,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5950502392001474129}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 47a4d480549968c479fc707f64da7a06, type: 3}
 --- !u!23 &5142405825325805188
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -431,7 +431,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &175580263250996444
 Transform:
   m_ObjectHideFlags: 0

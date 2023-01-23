@@ -17,7 +17,7 @@ public class EnemyProjectile : MonoBehaviour
         missileRb = GetComponent<Rigidbody>();
         Invoke(nameof(SelfDestruct), enemyProjectileLifeTime);
     }
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player" ||
             other.gameObject.tag == "EndPoint" ||

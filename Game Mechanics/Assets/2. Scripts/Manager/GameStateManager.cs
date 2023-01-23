@@ -164,8 +164,7 @@ public class GameStateManager : MonoBehaviour
     public void StartWave()
     {
         if (EnemySpawnController.Instance.waveNumber == 4 || 
-            EnemySpawnController.Instance.waveNumber == 7 ||
-            EnemySpawnController.Instance.waveNumber == 10)
+            EnemySpawnController.Instance.waveNumber == 7)
         {
             foreach (Item item in Resources.FindObjectsOfTypeAll(typeof(Item)) as Item[])
             {

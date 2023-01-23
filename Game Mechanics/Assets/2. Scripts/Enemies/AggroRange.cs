@@ -56,7 +56,7 @@ public class AggroRange : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if ((other.gameObject.tag == "Player" && other.gameObject != enemyScript.attackTarget) ||
+        if ((other.gameObject.tag == "Player"/* && other.gameObject != enemyScript.attackTarget*/) ||
             other.gameObject.tag == "EndPoint" ||
             other.gameObject.tag == "Tower")
         {
@@ -108,7 +108,6 @@ public class AggroRange : MonoBehaviour
 
             return;
         }
-
 
         if ((Vector3.Distance(transform.position, enemyScript.endPoint.position) >
             Vector3.Distance(enemyScript.player.transform.position, enemyScript.endPoint.position)) &&

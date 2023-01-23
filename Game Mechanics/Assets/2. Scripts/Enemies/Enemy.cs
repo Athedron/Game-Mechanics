@@ -95,7 +95,23 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
     public void MoveToTarget(GameObject lookAtObj, Transform destination)
     {
-        transform.LookAt(lookAtObj.transform);
+       
+
+        if (lookAtObj == ship)
+        {
+            Vector3 lookAt;
+
+            lookAt = new Vector3(lookAtObj.transform.position.x, 
+                lookAtObj.transform.position.y + 15f,
+                lookAtObj.transform.position.z);
+
+            transform.LookAt(lookAt);
+        }
+        else
+        {
+            transform.LookAt(lookAtObj.transform);
+        }
+        
         agent.SetDestination(destination.position);
     }
 

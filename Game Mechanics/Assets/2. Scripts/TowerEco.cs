@@ -71,6 +71,7 @@ public class TowerEco : MonoBehaviour
         UpdateTextUi();
         lookAt = StartCoroutine(LookAt());
         buyTower = StartCoroutine(BuyTower());
+        StartCoroutine(FixTowerIenumerator());
         
     }
 
@@ -129,7 +130,7 @@ public class TowerEco : MonoBehaviour
 
     public IEnumerator BuyTower()
     {
-        while (player.coins >= towerCost)
+        while (player.coins >= towerCost && !tower.broken)
         {
             yield return null;
 
@@ -158,16 +159,30 @@ public class TowerEco : MonoBehaviour
                     towerBought = true;
                     UpdateTextUi();
                 }
-                else if (tower.broken)
+                else
+                {
+                    UpgradeTower();
+                }
+                yield return new WaitForSeconds(2);
+            }
+        }
+    }
+    
+    public IEnumerator FixTowerIenumerator()
+    {
+        while (player.coins >= towerFixCost && tower.broken)
+        {
+            yield return null;
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (tower.broken)
                 {
                     FixTower();
                     tower.UpdateHealthBar();
                     UpdateTextUi();
                 }
-                else
-                {
-                    UpgradeTower();
-                }
+
                 yield return new WaitForSeconds(2);
             }
         }

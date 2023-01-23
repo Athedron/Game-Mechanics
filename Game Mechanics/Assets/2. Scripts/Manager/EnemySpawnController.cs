@@ -52,6 +52,8 @@ public class EnemySpawnController : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        ResetForNextLevel();
     }
 
     void Start()
@@ -87,12 +89,11 @@ public class EnemySpawnController : MonoBehaviour
 
     public void SpawnWave()
     {
-        if (waveNumber == maxWaves + 2)
+        if (waveNumber == maxWaves + 1)
         {
             GameStateManager.Instance.WinCondition();
             return;
         }
-            
 
         amountOfEnemies = startAmountOffEnemies + (int)(rampUpSpeed * Mathf.Pow(waveNumber, 2f));
 
@@ -156,6 +157,12 @@ public class EnemySpawnController : MonoBehaviour
         {
             spawnList.Add(spawnPoint);
         }
+    }
+
+    public void ResetForNextLevel()
+    {
+        ResetForNextWave();
+        waveNumber = 1;
     }
 
     public void UpdateEnemyAmount()

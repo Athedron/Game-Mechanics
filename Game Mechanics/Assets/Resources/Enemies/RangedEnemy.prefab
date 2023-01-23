@@ -86,7 +86,7 @@ Transform:
   m_GameObject: {fileID: 344019953369873520}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.7, z: 0}
-  m_LocalScale: {x: 0.84631085, y: 0.058534294, z: 0.84631085}
+  m_LocalScale: {x: 0.84631085, y: 0.21904702, z: 0.84631085}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6978845595526532910}
@@ -99,7 +99,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344019953369873520}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: e49c959f3097f964e85dde87cf1eca2f, type: 3}
 --- !u!23 &1870687467240334071
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -342,9 +342,9 @@ MonoBehaviour:
   isCoroutingRunning: 0
   coin: {fileID: 0}
   healthPack: {fileID: 0}
-  minRangedSpeed: 4
-  maxRangedSpeed: 6
-  enemyProjectileSpeed: 20
+  minRangedSpeed: 7
+  maxRangedSpeed: 8
+  enemyProjectileSpeed: 30
   coinAmount: 0
 --- !u!195 &8146337611642381072
 NavMeshAgent:

@@ -167,7 +167,20 @@ public class Tower : MonoBehaviour, IDamagable
 
     public void ResetPos()
     {
+        foreach (var enemy in enemiesInRange)
+        {
+            if (enemy != null)
+            {
+                var enemyScript = enemy.GetComponent<Enemy>();
+                enemyScript.towers.Remove(gameObject);
+                enemyScript.ChangeTarget(enemyScript.ship);
+
+                enemyScript.canAttack = false;
+            }
+        }
+
         barrelGfx.rotation = startRot;
+        canAttack = false;
     }
 
     public void LostEnemy(GameObject lostEnemy)
@@ -219,7 +232,7 @@ public class Tower : MonoBehaviour, IDamagable
     public void Broken()
     {
         broken = true;
-
+        canAttack = false;
         smoke.SetActive(true);
     }
 
