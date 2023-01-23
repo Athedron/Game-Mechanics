@@ -99,10 +99,21 @@ public class GameStateManager : MonoBehaviour
         // 0 = player died, 1 = ship died
         playerUi.transform.GetChild(2).transform.GetChild(typeOfLoss).gameObject.SetActive(true);
 
-        playerUi.transform.GetChild(2).transform.GetChild(2).GetComponent<TMP_Text>().text = "Wave: " 
-                                                                          + EnemySpawnController.Instance.waveNumber 
-                                                                          + " / "
-                                                                          + EnemySpawnController.Instance.maxWaves;
+        if (SceneManager.GetActiveScene().buildIndex != 3)
+        {
+
+            playerUi.transform.GetChild(2).transform.GetChild(2).GetComponent<TMP_Text>().text = "Wave: "
+                                                                              + EnemySpawnController.Instance.waveNumber
+                                                                              + " / "
+                                                                              + EnemySpawnController.Instance.maxWaves;
+        }
+        else
+        {
+
+            playerUi.transform.GetChild(2).transform.GetChild(2).GetComponent<TMP_Text>().text = "Wave: "
+                                                                              + EnemySpawnController.Instance.waveNumber;
+
+        }
     }
 
     public void RestartLevel()
@@ -127,6 +138,14 @@ public class GameStateManager : MonoBehaviour
     public void Level2()
     {
         Time.timeScale = 1;
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        SceneManager.LoadScene(2);
+    }
+    
+    public void Endless()
+    {
+        Time.timeScale = 1;
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
         SceneManager.LoadScene(2);
     }
 

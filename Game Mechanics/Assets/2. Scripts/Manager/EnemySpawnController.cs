@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
 
+using UnityEngine.SceneManagement;
+
 public class EnemySpawnController : MonoBehaviour
 {
     public static EnemySpawnController Instance;
@@ -89,7 +91,7 @@ public class EnemySpawnController : MonoBehaviour
 
     public void SpawnWave()
     {
-        if (waveNumber == maxWaves + 1)
+        if (waveNumber == maxWaves + 1 && SceneManager.GetActiveScene().buildIndex != 3)
         {
             GameStateManager.Instance.WinCondition();
             return;
@@ -104,7 +106,16 @@ public class EnemySpawnController : MonoBehaviour
 
         SpawnEnemies(amountOfEnemies);
 
-        waveNumberTmp.text = "Wave: " + waveNumber + " / " + maxWaves;
+
+        if (SceneManager.GetActiveScene().buildIndex != 3)
+        {
+            waveNumberTmp.text = "Wave: " + waveNumber + " / " + maxWaves;
+        }
+        else
+        {
+            waveNumberTmp.text = "Wave: " + waveNumber;
+        }
+
         waveNumber++;
     }
 
