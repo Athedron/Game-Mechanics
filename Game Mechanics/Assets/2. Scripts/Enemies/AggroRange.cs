@@ -99,7 +99,7 @@ public class AggroRange : MonoBehaviour
         if (currentTarget == enemyScript.ship)
             return;
 
-        if (enemyScript.towers.Count != 0 && currentTarget.TryGetComponent<Tower>(out Tower t))
+        if (enemyScript.towers.Count != 0 && currentTarget != null && currentTarget.TryGetComponent<Tower>(out Tower t))
         {
             if (!t.broken)
             {

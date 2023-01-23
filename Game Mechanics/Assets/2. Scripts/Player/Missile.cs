@@ -10,6 +10,8 @@ public class Missile : MonoBehaviour, ISelfDestructable
     [HideInInspector]public Vector3 target;
     [HideInInspector]public int damage;
 
+    public  bool playerFired;
+
     private GameObject explosionPrefab;
 
     private void Start()
@@ -54,7 +56,10 @@ public class Missile : MonoBehaviour, ISelfDestructable
         if (explosionPrefab != null)
         {
            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            explosion.GetComponent<MissileExplosion>().missileDamage = damage;
+            var explosionComp = explosion.GetComponent<MissileExplosion>();
+
+            explosionComp.missileDamage = damage;
+            explosionComp.playerFired = playerFired;
         }
     }
 }

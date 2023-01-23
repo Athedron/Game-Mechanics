@@ -120,6 +120,7 @@ public class GameStateManager : MonoBehaviour
     public void Level1()
     {
         Time.timeScale = 1;
+        PlayerPrefs.SetInt("TutorialCompleted", 0);
         SceneManager.LoadScene(1);
     }
     

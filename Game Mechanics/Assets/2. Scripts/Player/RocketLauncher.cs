@@ -18,6 +18,7 @@ public class RocketLauncher : MonoBehaviour
     [Header("Rocket Launcher")]
     public float rocketLauncherCoolDown;
     public float missileSpeed;
+    private bool playerFired = true;
 
     private void Start()
     {
@@ -63,8 +64,11 @@ public class RocketLauncher : MonoBehaviour
     {
         RaycastHit hit;
         GameObject missile = Instantiate(missilePrefab, firePoint.position, transform.rotation);
-        missile.GetComponent<Missile>().missileSpeed = missileSpeed;
-        missile.GetComponent<Missile>().damage = damage;
+        var missleComp = missile.GetComponent<Missile>();
+
+        missleComp.missileSpeed = missileSpeed;
+        missleComp.damage = damage;
+        missleComp.playerFired = playerFired;
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity) && 
             hit.collider.gameObject.activeSelf)
