@@ -63,11 +63,12 @@ public class RocketLauncher : MonoBehaviour
         GameObject missile = Instantiate(missilePrefab, firePoint.position, transform.rotation);
         missile.GetComponent<Missile>().missileSpeed = missileSpeed;
 
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity) && 
+            hit.collider.gameObject.activeSelf)
         {
             missile.GetComponent<Missile>().target = hit.point;
         }
-        else
+        else /*if (hit.collider.gameObject.activeSelf)*/
         {
             missile.GetComponent<Missile>().target = Camera.main.transform.position + Camera.main.transform.forward * 5000f;
         }

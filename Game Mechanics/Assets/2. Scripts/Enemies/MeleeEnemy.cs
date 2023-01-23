@@ -63,7 +63,7 @@ public class MeleeEnemy : Enemy
         hammer.localPosition = hammerStartPos;
     }
 
-    public override void SpawnItem()
+    public override void SpawnExplosion()
     {
         if (dropsHealth)
             Instantiate(healthPack, transform.position, Quaternion.identity);

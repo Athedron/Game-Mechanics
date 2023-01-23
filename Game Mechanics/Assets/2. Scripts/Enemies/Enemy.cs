@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
         EnemySpawnController.Instance.m_EnemyDied.Invoke();
 
-        SpawnItem();
+        SpawnExplosion();
         Destroy(gameObject);
     }
 
@@ -187,7 +187,7 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
         yield return null;   
     }
 
-    public virtual void SpawnItem()
+    public virtual void SpawnExplosion()
     {
 
     }

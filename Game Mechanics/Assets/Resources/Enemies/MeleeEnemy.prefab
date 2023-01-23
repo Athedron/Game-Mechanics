@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 7404470503532353083}
   - component: {fileID: 3598937972822532557}
   - component: {fileID: 5142405825325805188}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,7 +390,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8836013710464748376}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 175580263250996444}
   - component: {fileID: 3952834967987750991}
   - component: {fileID: 2809814107654483140}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

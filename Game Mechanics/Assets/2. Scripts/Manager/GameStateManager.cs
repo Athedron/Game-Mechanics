@@ -47,7 +47,7 @@ public class GameStateManager : MonoBehaviour
     {
         Time.timeScale = 0;
 
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         playerUi.transform.GetChild(1).gameObject.SetActive(false);
@@ -61,7 +61,7 @@ public class GameStateManager : MonoBehaviour
         playerUi.transform.GetChild(1).gameObject.SetActive(false);
         playerUi.transform.GetChild(2).gameObject.SetActive(true);
 
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         // 0 = player died, 1 = ship died
@@ -112,13 +112,18 @@ public class GameStateManager : MonoBehaviour
         if (EnemySpawnController.Instance.waveNumber == 4 || 
             EnemySpawnController.Instance.waveNumber == 7 ||
             EnemySpawnController.Instance.waveNumber == 10)
+        {
             StartCoroutine(CountDown(waveTimerIntermission));
+            SpawnPortal.Instance.ChangePortalState(SpawnPortal.PortalStates.PASSIVE);
+        }
         else
             StartCoroutine(CountDown(waveTimer));
     }
 
     public IEnumerator CountDown(int timerDuration)
     {
+        SpawnPortal.Instance.ChangePortalState(SpawnPortal.PortalStates.ACTIVE);
+
         timer = timerDuration;
         playerUi.transform.GetChild(5).gameObject.SetActive(true);
 
@@ -138,5 +143,7 @@ public class GameStateManager : MonoBehaviour
         }
         else
             EnemySpawnController.Instance.StartCoroutine(EnemySpawnController.Instance.StartNewWave());
+
+        SpawnPortal.Instance.ChangePortalState(SpawnPortal.PortalStates.AGRESSIVE);
     }
 }

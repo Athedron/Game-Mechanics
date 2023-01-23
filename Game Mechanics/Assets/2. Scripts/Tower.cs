@@ -138,6 +138,10 @@ public class Tower : MonoBehaviour, IDamagable
 
         GameObject projectile = Instantiate(towerProjectile, shootPoint.position, shootPoint.rotation);
         projectile.GetComponent<Missile>().missileSpeed = towerProjectileSpeed;
+        RaycastHit hit;
+
+        if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, Mathf.Infinity))
+            projectile.GetComponent<Missile>().target = hit.point;
 
         yield return new WaitForSeconds(attackCooldown);
 

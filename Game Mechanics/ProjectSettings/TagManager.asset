@@ -12,6 +12,9 @@ TagManager:
   - TowerRange
   - Tower
   - PlayerUi
+  - SpawnPortal
+  - TowerEco
+  - Item
   layers:
   - Default
   - TransparentFX

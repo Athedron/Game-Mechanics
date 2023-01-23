@@ -14,7 +14,7 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" ||
+        if ((other.gameObject.tag == "Player" && other.gameObject == enemyScript.attackTarget) ||
             other.gameObject.tag == "EndPoint" ||
             other.gameObject.tag == "Tower")
         {
@@ -25,6 +25,20 @@ public class AttackRange : MonoBehaviour
             else if (other.gameObject != enemyScript.attackTarget && other.gameObject != null)
             {
                 enemyScript.canAttack = false;
+            }
+
+            if ((Vector3.Distance(enemyScript.transform.position, enemyScript.endPoint.position) <
+            Vector3.Distance(enemyScript.player.transform.position, enemyScript.endPoint.position)) &&
+            (enemyScript.attackTarget != enemyScript.ship || enemyScript.attackTarget != enemyScript.tower))
+            {
+                enemyScript.canAttack = false;
+            }
+
+            if ((Vector3.Distance(enemyScript.transform.position, enemyScript.endPoint.position) <
+            Vector3.Distance(enemyScript.player.transform.position, enemyScript.endPoint.position)) &&
+            (enemyScript.attackTarget == enemyScript.ship || enemyScript.attackTarget == enemyScript.tower))
+            {
+                enemyScript.canAttack = true;
             }
         }
     }

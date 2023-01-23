@@ -8,7 +8,7 @@ public class AggroRange : MonoBehaviour
     bool inRangeOffShip;
 
     public GameObject currentTarget;
-    private GameObject newTarget;
+    private GameObject oldTarget;
 
     private void Start()
     {
@@ -17,27 +17,22 @@ public class AggroRange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        newTarget = other.gameObject;
-
         if (other.gameObject.tag == "Player" ||
             other.gameObject.tag == "EndPoint" ||
             other.gameObject.tag == "Tower")
         {
             if (other.gameObject == enemyScript.ship)
             {
-                currentTarget = enemyScript.ship;
                 enemyScript.ChangeTarget(enemyScript.ship);
             }
             else if (gameObject.GetComponentInParent<RangedEnemy>() && 
                      other.gameObject.tag == "Tower" && TargetsTower())
             {
-                currentTarget = enemyScript.tower;
                 enemyScript.towers.Add(other.gameObject);
                 enemyScript.ChangeTarget(PickClosestTower());
             }
             else if (other.gameObject == enemyScript.player && currentTarget == other.gameObject)
             {
-                currentTarget = enemyScript.player;
                 enemyScript.ChangeTarget(enemyScript.player);
             }
         }
@@ -53,7 +48,7 @@ public class AggroRange : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (/*other.gameObject.tag == "Player" ||*/
+        if ((other.gameObject.tag == "Player" && other.gameObject != enemyScript.attackTarget) ||
             other.gameObject.tag == "EndPoint" ||
             other.gameObject.tag == "Tower")
         {
@@ -78,13 +73,14 @@ public class AggroRange : MonoBehaviour
             enemyScript.ChangeTarget(enemyScript.ship);
             currentTarget = null;
         }
-        
+
 
         if (other.gameObject == enemyScript.player)
         {
             enemyScript.ChangeTarget(enemyScript.ship);
             currentTarget = null;
         }
+        
     }
 
     private void Update()

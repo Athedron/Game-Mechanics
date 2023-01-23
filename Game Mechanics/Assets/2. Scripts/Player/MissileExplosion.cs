@@ -13,8 +13,8 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
 
     void Start()
     {
-        Invoke(nameof(SpawnItem), explosionLifeTime);
-        radius = GetComponent<SphereCollider>().radius;
+        Invoke(nameof(SpawnExplosion), explosionLifeTime);
+        radius = GetComponent<SphereCollider>().radius * 2;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,9 +30,6 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
             damagable.TakeDamage(missileDamage);
         }
 
-            
-       
-
         // Knockback
         if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
@@ -47,7 +44,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
         }
     }
 
-    public void SpawnItem()
+    public void SpawnExplosion()
     {
         Destroy(gameObject);
     }
