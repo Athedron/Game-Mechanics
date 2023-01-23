@@ -182,6 +182,14 @@ public class GameStateManager : MonoBehaviour
     
     public void StartWave()
     {
+        if (EnemySpawnController.Instance.waveNumber >= 12)
+        {
+            foreach (Item item in Resources.FindObjectsOfTypeAll(typeof(Item)) as Item[])
+            {
+                item.moveToPlayer = true;
+            }
+        }
+
         if (EnemySpawnController.Instance.waveNumber == 4 || 
             EnemySpawnController.Instance.waveNumber == 7)
         {
