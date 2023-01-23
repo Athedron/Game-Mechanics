@@ -21,7 +21,8 @@ public class EnemyProjectile : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" ||
             other.gameObject.tag == "EndPoint" ||
-            other.gameObject.tag == "Tower")
+            other.gameObject.tag == "Tower" ||
+            other.gameObject.tag == "Environment")
         {
             if (other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
                 damagable.TakeDamage(enemyProjectileDamage);

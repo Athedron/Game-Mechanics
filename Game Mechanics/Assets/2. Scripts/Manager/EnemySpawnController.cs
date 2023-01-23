@@ -20,6 +20,7 @@ public class EnemySpawnController : MonoBehaviour
     public float rampUpSpeed;
     private int amountOfEnemies;
     public int amountOfEnemiesAlive;
+    public float spawnSingleEnemyInterval;
 
     public int startAmountOffEnemies;
 
@@ -86,13 +87,17 @@ public class EnemySpawnController : MonoBehaviour
 
     public void SpawnWave()
     {
-        if (waveNumber == maxWaves + 1)
+        if (waveNumber == maxWaves + 2)
+        {
             GameStateManager.Instance.WinCondition();
+            return;
+        }
+            
 
         amountOfEnemies = startAmountOffEnemies + (int)(rampUpSpeed * Mathf.Pow(waveNumber, 2f));
 
-        if (amountOfEnemies >= spawnList.Count)
-            amountOfEnemies = spawnList.Count;
+        /*if (amountOfEnemies >= spawnList.Count)
+            amountOfEnemies = spawnList.Count;*/
 
         amountOfEnemiesAlive = amountOfEnemies;
 
@@ -107,24 +112,37 @@ public class EnemySpawnController : MonoBehaviour
         int maxMeleeEnemies = (int)(0.33f * enemyAmount);
         int maxRangedEnemies = enemyAmount - maxMeleeEnemies;
 
+        StartCoroutine(SpawnRangedEnemy(maxRangedEnemies));
+        StartCoroutine(SpawnMeleeEnemy(maxMeleeEnemies));        
+    }
+
+    public IEnumerator SpawnRangedEnemy(int maxRangedEnemies)
+    {
         for (int i = 0; i < maxRangedEnemies; i++)
         {
             var spawnedEnemy = Instantiate(rangedEnemy, RandomSpawnPoint(), false);
             spawnedEnemy.transform.SetParent(transform, true);
+            yield return new WaitForSeconds(spawnSingleEnemyInterval);
         }
-
+    }
+    public IEnumerator SpawnMeleeEnemy(int maxMeleeEnemies)
+    {
         for (int i = 0; i < maxMeleeEnemies; i++)
         {
             var spawnedEnemy = Instantiate(meleeEnemy, RandomSpawnPoint(), false);
             spawnedEnemy.transform.SetParent(transform, true);
+            yield return new WaitForSeconds(spawnSingleEnemyInterval);
         }
     }
+
+
+
 
     public Transform RandomSpawnPoint()
     {
         Transform spawnPoint = spawnList[Random.Range(0, spawnList.Count)];
 
-        spawnList.Remove(spawnPoint);
+        //spawnList.Remove(spawnPoint);
 
         return spawnPoint;
     }

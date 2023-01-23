@@ -63,7 +63,7 @@ public class MeleeEnemy : Enemy
         hammer.localPosition = hammerStartPos;
     }
 
-    public override void SpawnExplosion()
+    public override void SpawnItem()
     {
         if (dropsHealth)
             Instantiate(healthPack, transform.position, Quaternion.identity);
@@ -71,7 +71,7 @@ public class MeleeEnemy : Enemy
 
     public void HealthPackDropCalc()
     {
-        if ((int)Random.Range(0f, 5f) == 1)
+        if ((int)Random.Range(0f, 3f) == 1)
             dropsHealth = true;
     }
 }

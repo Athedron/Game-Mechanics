@@ -6,10 +6,15 @@ using TMPro;
 public class TowerEco : MonoBehaviour
 {
     public int towerCost;
+    public int towerFixCost;
     [HideInInspector] public int towerCostStart;
     public int towerCostMultiplier;
     public int towerUpgradeDamageMultiplier;
     public int towerLevel;
+
+    private Material level1Mat; 
+    private Material level2Mat;
+    private Material level3Mat;
 
     [HideInInspector] public bool inRange;
 
@@ -34,6 +39,26 @@ public class TowerEco : MonoBehaviour
         player = playerObj.GetComponent<CharacterController>();
 
         towerCostStart = towerCost;
+
+        level1Mat = Resources.Load("Tower/Level1") as Material;
+        level2Mat = Resources.Load("Tower/Level2") as Material;
+        level3Mat = Resources.Load("Tower/Level3") as Material;
+    }
+
+    private void OnEnable()
+    {
+        tower = transform.parent.GetChild(0).GetComponentInChildren<Tower>();
+        buyUi = transform.GetChild(1).gameObject;
+        upgradeUi = transform.GetChild(2).gameObject;
+
+        playerObj = FindObjectOfType<CharacterController>().gameObject;
+        player = playerObj.GetComponent<CharacterController>();
+
+        towerCostStart = towerCost;
+
+        level1Mat = Resources.Load("Tower/Level1") as Material;
+        level2Mat = Resources.Load("Tower/Level2") as Material;
+        level3Mat = Resources.Load("Tower/Level3") as Material;
     }
 
     private void FixedUpdate()
@@ -43,19 +68,32 @@ public class TowerEco : MonoBehaviour
 
     public void EnableUi()
     {
+        UpdateTextUi();
+        lookAt = StartCoroutine(LookAt());
+        buyTower = StartCoroutine(BuyTower());
+        
+    }
+
+    public void UpdateTextUi()
+    {
         if (!towerBought)
         {
             buyUi.SetActive(true);
             buyUi.transform.GetChild(1).GetComponent<TMP_Text>().text = "Tower Cost: " + towerCost;
+            buyUi.transform.GetChild(2).GetComponent<TMP_Text>().color = Color.green;
         }
         else
         {
             upgradeUi.SetActive(true);
-            upgradeUi.transform.GetChild(0).GetComponent<TMP_Text>().text = "Upgrade Cost: " + towerCost;
+            if (!tower.broken)
+            {
+                upgradeUi.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Upgrade Cost: " + towerCost;
+            }
+            else
+            {
+                upgradeUi.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Repair Cost: " + towerFixCost;
+            }
         }
-
-        lookAt = StartCoroutine(LookAt());
-        buyTower = StartCoroutine(BuyTower());
     }
 
     public IEnumerator LookAt()
@@ -69,9 +107,9 @@ public class TowerEco : MonoBehaviour
         {
             yield return null;
             if (!towerBought)
-                buyUi.transform.LookAt(playerObj.transform.position);
+                buyUi.transform.LookAt(new Vector3(playerObj.transform.position.x, buyUi.transform.position.y, playerObj.transform.position.z));
             else
-                upgradeUi.transform.LookAt(playerObj.transform.position);
+                upgradeUi.transform.LookAt(new Vector3(playerObj.transform.position.x, upgradeUi.transform.position.y, playerObj.transform.position.z));
         }
     }
 
@@ -118,24 +156,58 @@ public class TowerEco : MonoBehaviour
                     DisableUi();
                     towerCost *= towerCostMultiplier;
                     towerBought = true;
-                    EnableUi();
+                    UpdateTextUi();
+                }
+                else if (tower.broken)
+                {
+                    FixTower();
+                    tower.UpdateHealthBar();
+                    UpdateTextUi();
                 }
                 else
                 {
                     UpgradeTower();
                 }
-
                 yield return new WaitForSeconds(2);
             }
         }
+    }
+
+    public void FixTower()
+    {
+        player.UpdateCoinAmount(-towerFixCost);
+        tower.broken = false;
+        tower.smoke.SetActive(false);
+        tower.enemiesInRange.Clear();
     }
 
     public void UpgradeTower()
     {
         player.UpdateCoinAmount(-towerCost);
         towerCost *= towerCostMultiplier;
+        towerFixCost *= towerCostMultiplier;
         tower.towerDamage *= towerUpgradeDamageMultiplier;
+        tower.health *= towerUpgradeDamageMultiplier;
+        tower.maxHealth *= towerUpgradeDamageMultiplier;
         towerLevel++;
-        upgradeUi.transform.GetChild(0).GetComponent<TMP_Text>().text = "Upgrade Cost: " + towerCost;
+        ChangeTowerLevelMat(towerLevel);
+        upgradeUi.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Upgrade Cost: " + towerCost;
+    }
+
+    public void ChangeTowerLevelMat(int towerLevel)
+    {
+        switch (towerLevel)
+        {
+            case 1:
+                tower.headGfx.GetComponent<MeshRenderer>().material = level1Mat;
+                return;
+            case 2:
+                tower.headGfx.GetComponent<MeshRenderer>().material = level2Mat;
+                return;
+            case 3:
+                tower.headGfx.GetComponent<MeshRenderer>().material = level3Mat;
+                return;
+        }
+        
     }
 }

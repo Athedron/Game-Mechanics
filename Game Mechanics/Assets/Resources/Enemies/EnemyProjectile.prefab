@@ -129,5 +129,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyProjectileSpeed: 0
-  enemyProjectileLifeTime: 10
+  enemyProjectileLifeTime: 5
   enemyProjectileDamage: 0

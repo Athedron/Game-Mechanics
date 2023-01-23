@@ -8,6 +8,8 @@ public class CoinBehaviour : Item
     public int coinAmount;
     UnityEvent m_CoinScaler;
     private bool isScaled;
+    private GameObject smallCoin;
+    private GameObject bigCoin;
 
     private void Start()
     {
@@ -15,6 +17,9 @@ public class CoinBehaviour : Item
             m_CoinScaler = new UnityEvent();
 
         m_CoinScaler.AddListener(CoinScale);
+
+        smallCoin = transform.GetChild(0).gameObject;
+        bigCoin = transform.GetChild(1).gameObject;
     }
     
     private void OnTriggerEnter(Collider collision)
@@ -37,7 +42,8 @@ public class CoinBehaviour : Item
 
     public void CoinScale()
     {
-        transform.localScale *= coinAmount * 0.3f;
+        smallCoin.gameObject.SetActive(false);
+        bigCoin.gameObject.SetActive(true);
         isScaled = true;
     }
 }

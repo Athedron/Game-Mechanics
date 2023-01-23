@@ -26,21 +26,29 @@ public class AggroRange : MonoBehaviour
                 enemyScript.ChangeTarget(enemyScript.ship);
             }
             else if (gameObject.GetComponentInParent<RangedEnemy>() && 
-                     other.gameObject.tag == "Tower" && TargetsTower())
+                     other.gameObject.tag == "Tower" && ChangeTargetTower())
             {
                 enemyScript.towers.Add(other.gameObject);
                 enemyScript.ChangeTarget(PickClosestTower());
             }
-            else if (other.gameObject == enemyScript.player && currentTarget == other.gameObject)
+            else if (other.gameObject == enemyScript.player && currentTarget == other.gameObject && ChangeTargetPlayer())
             {
                 enemyScript.ChangeTarget(enemyScript.player);
             }
         }
     }
 
-    private bool TargetsTower()
+    private bool ChangeTargetTower()
     {
-        if ((int)Random.Range(0f, 4f) == 1)
+        if ((int)Random.Range(0f, 9f) == 1)
+            return true;
+        else
+            return false;
+    }
+    
+    private bool ChangeTargetPlayer()
+    {
+        if ((int)Random.Range(0f, 2f) == 1)
             return true;
         else
             return false;
@@ -91,9 +99,13 @@ public class AggroRange : MonoBehaviour
         if (currentTarget == enemyScript.ship)
             return;
 
-        if (enemyScript.towers.Count != 0)
+        if (enemyScript.towers.Count != 0 && currentTarget.TryGetComponent<Tower>(out Tower t))
         {
-            enemyScript.ChangeTarget(ATower(currentTarget));
+            if (!t.broken)
+            {
+                enemyScript.ChangeTarget(ATower(currentTarget));
+            }
+
             return;
         }
 

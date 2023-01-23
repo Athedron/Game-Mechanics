@@ -81,13 +81,15 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
 
         foreach (GameObject tower in towersArray)
         {
-            var towerScript = tower.GetComponent<Tower>();
-            towerScript.LostEnemy(gameObject);
+            if (tower.TryGetComponent<Tower>(out Tower towerScript))
+            {
+                towerScript.LostEnemy(gameObject);
+            }
         }
 
         EnemySpawnController.Instance.m_EnemyDied.Invoke();
 
-        SpawnExplosion();
+        SpawnItem();
         Destroy(gameObject);
     }
 
@@ -179,7 +181,13 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
     public void AttackTarget(GameObject attackingTarget)
     {
         if (!isCoroutingRunning)
-            attackCoroutine = StartCoroutine(Attack(enemyDamage, attackingTarget));
+        {
+            if (attackingTarget == player)
+                attackCoroutine = StartCoroutine(Attack(enemyDamage / 2, attackingTarget));
+            else
+                attackCoroutine = StartCoroutine(Attack(enemyDamage, attackingTarget));
+        }
+           
     }
 
     public virtual IEnumerator Attack(int enemyDamage, GameObject target)
@@ -187,7 +195,7 @@ public class Enemy : MonoBehaviour, IDamagable, ISelfDestructable
         yield return null;   
     }
 
-    public virtual void SpawnExplosion()
+    public virtual void SpawnItem()
     {
 
     }

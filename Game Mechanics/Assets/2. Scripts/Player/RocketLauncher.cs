@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RocketLauncher : MonoBehaviour
 {
+    public int damage;
+
     private Transform combatLookAt;
     private RaycastHit rocketLauncherLookRayHit;
 
@@ -62,6 +64,7 @@ public class RocketLauncher : MonoBehaviour
         RaycastHit hit;
         GameObject missile = Instantiate(missilePrefab, firePoint.position, transform.rotation);
         missile.GetComponent<Missile>().missileSpeed = missileSpeed;
+        missile.GetComponent<Missile>().damage = damage;
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity) && 
             hit.collider.gameObject.activeSelf)

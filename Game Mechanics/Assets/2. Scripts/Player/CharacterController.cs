@@ -58,6 +58,7 @@ public class CharacterController : MonoBehaviour, IDamagable
         playerRb.freezeRotation = true;
 
         UpdateHealthBar();
+        UpdateCoinAmount(coins);
     }
 
     private void Update()
@@ -159,9 +160,12 @@ public class CharacterController : MonoBehaviour, IDamagable
 
     public void UpdateHealthBar()
     {
-        var healthBar = transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+        var playerhealthObj = transform.GetChild(1).GetChild(0);
+        var healthBar = playerhealthObj.GetChild(0).GetComponent<Image>();
+        var healthText = playerhealthObj.GetChild(1).GetComponent<TMP_Text>();
 
         healthBar.fillAmount = (float)health / maxHealth;
+        healthText.text = health + "%";
 
         if (healthBar.fillAmount < 0.25f)
         {

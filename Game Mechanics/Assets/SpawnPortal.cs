@@ -21,6 +21,8 @@ public class SpawnPortal : MonoBehaviour
 
     private MeshRenderer portalRenderer;
 
+    public GameObject skipIntermissionText;
+
 
     private void Awake()
     {
@@ -57,11 +59,15 @@ public class SpawnPortal : MonoBehaviour
                 // green
                 portalRenderer.material = passiveMat;
 
+                if (EnemySpawnController.Instance.waveNumber == 4)
+                    skipIntermissionText.SetActive(true);                    
+
                 break;
             case PortalStates.ACTIVE:
                 // yellow
                 GameStateManager.Instance.timer = activeTimeDuration;
                 portalRenderer.material = activeMat;
+                skipIntermissionText.SetActive(false);
 
                 break;
             case PortalStates.AGRESSIVE:

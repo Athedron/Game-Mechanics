@@ -53,7 +53,7 @@ public class RangedEnemy : Enemy
         isCoroutingRunning = false;
     }
 
-    public override void SpawnExplosion()
+    public override void SpawnItem()
     {
         var coinTmp = Instantiate(coin, transform.position, Quaternion.identity);
         coinTmp.GetComponent<CoinBehaviour>().coinAmount = coinAmount;
@@ -61,7 +61,7 @@ public class RangedEnemy : Enemy
 
     public void CoinAmountCalc()
     {
-        if ((int)Random.Range(0f, 50f) == 1)
+        if ((int)Random.Range(0f, 20f) == 1)
             coinAmount = 5;
         else
             coinAmount = 1;

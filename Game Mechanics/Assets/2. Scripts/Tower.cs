@@ -9,13 +9,14 @@ public class Tower : MonoBehaviour, IDamagable
     public int maxHealth;
     public Image healthBar;
     public int towerDamage;
+    [HideInInspector]public int startTowerDamage;
     public float towerProjectileSpeed;
     public int attackCooldown;
 
     private GameObject towerProjectile;
 
     private Transform barrelGfx;
-    private Transform headGfx;
+    [HideInInspector]public GameObject headGfx;
     private Transform shootPoint;
 
     private Quaternion startRot;
@@ -23,6 +24,9 @@ public class Tower : MonoBehaviour, IDamagable
     public List<GameObject> enemiesInRange = new List<GameObject>();
     public bool canAttack;
     public GameObject currentTarget;
+
+    public bool broken;
+    public GameObject smoke;
 
 
     [HideInInspector] public Coroutine attackCoroutine;
@@ -42,18 +46,28 @@ public class Tower : MonoBehaviour, IDamagable
     {
         barrelGfx = transform.GetChild(0).transform;
         shootPoint = barrelGfx.GetChild(0).GetChild(0).transform;
+        headGfx = transform.GetChild(1).GetChild(0).gameObject;
 
         towerProjectile = Resources.Load("Tower/TowerMissile") as GameObject;
 
         startRot = barrelGfx.rotation;
+        startTowerDamage = towerDamage;
 
         UpdateHealthBar();
+    }
+    private void OnEnable()
+    {
+        smoke = gameObject.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject;
+
+        broken = false;
+        smoke.SetActive(false);        
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        UpdateTarget();
+        if (!broken)
+            UpdateTarget();
     }
     
 
@@ -65,20 +79,22 @@ public class Tower : MonoBehaviour, IDamagable
 
         foreach (GameObject enemy in enemiesInRange)
         {
-            float distance = Vector3.Distance(enemy.transform.position, transform.position);
-
-            if (first)
+            if (enemy != null) 
             {
-                closestEnemy = enemy;
-                closestDistance = distance;
-                first = false;
-            }
-            else if (distance < closestDistance)
-            {
-                closestEnemy = enemy;
-                closestDistance = distance;
-            }
+                float distance = Vector3.Distance(enemy.transform.position, transform.position);
 
+                if (first)
+                {
+                    closestEnemy = enemy;
+                    closestDistance = distance;
+                    first = false;
+                }
+                else if (distance < closestDistance)
+                {
+                    closestEnemy = enemy;
+                    closestDistance = distance;
+                }
+            }
         }
 
         return closestEnemy;
@@ -138,6 +154,7 @@ public class Tower : MonoBehaviour, IDamagable
 
         GameObject projectile = Instantiate(towerProjectile, shootPoint.position, shootPoint.rotation);
         projectile.GetComponent<Missile>().missileSpeed = towerProjectileSpeed;
+        projectile.GetComponent<Missile>().damage = towerDamage;
         RaycastHit hit;
 
         if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, Mathf.Infinity))
@@ -156,10 +173,10 @@ public class Tower : MonoBehaviour, IDamagable
     public void LostEnemy(GameObject lostEnemy)
     {
         canAttack = false;
-        isCoroutingRunning = false;
+        //isCoroutingRunning = false;
 
         if (attackCoroutine != null)
-            StopCoroutine(attackCoroutine);
+            //StopCoroutine(attackCoroutine);
 
         enemiesInRange.Remove(lostEnemy);
 
@@ -183,18 +200,27 @@ public class Tower : MonoBehaviour, IDamagable
     {
         foreach (var enemy in enemiesInRange)
         {
-            var enemyScript = enemy.GetComponent<Enemy>();
-            enemyScript.towers.Remove(gameObject);
-            enemyScript.ChangeTarget(enemyScript.ship);
+            if (enemy != null)
+            {
+                var enemyScript = enemy.GetComponent<Enemy>();
+                enemyScript.towers.Remove(gameObject);
+                enemyScript.ChangeTarget(enemyScript.ship);
 
-            enemyScript.canAttack = false;
+                enemyScript.canAttack = false;
+            }
         }
 
-        var towerEco = transform.parent.GetChild(1).GetComponent<TowerEco>();
-        towerEco.towerCost = towerEco.towerCostStart;
-        towerEco.towerBought = false;
+        health = maxHealth;
+        towerDamage = startTowerDamage;
 
-        gameObject.SetActive(false);
+        Broken();
+    }
+
+    public void Broken()
+    {
+        broken = true;
+
+        smoke.SetActive(true);
     }
 
     public void UpdateHealthBar()

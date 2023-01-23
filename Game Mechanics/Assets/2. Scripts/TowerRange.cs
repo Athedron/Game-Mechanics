@@ -27,7 +27,7 @@ public class TowerRange : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "EnemyParent")
+        if (other.gameObject.tag == "EnemyParent" || other.gameObject == tower.currentTarget)
         {
             tower.canAttack = true;
         }

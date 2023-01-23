@@ -15,10 +15,16 @@ public class GameStateManager : MonoBehaviour
     public TowerEco[] towerEcoObjs = new TowerEco[4];
 
     public bool levelStarted = false;
+    public bool tutorialCompleted;
 
     public int waveTimer;
     public int waveTimerIntermission;
     public int timer;
+
+    public Transform playerStartPos;
+    public Transform playerTutorialStartPos;
+
+    public List<GameObject> tutorialEnemies = new List<GameObject>();
 
 
     private void Awake()
@@ -32,6 +38,11 @@ public class GameStateManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if (PlayerPrefs.GetInt("TutorialCompleted") == 1)
+        {
+            tutorialCompleted = true;
+        }
+
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -41,6 +52,27 @@ public class GameStateManager : MonoBehaviour
         baseObject = FindObjectOfType<Ship>();
 
         towerEcoObjs = FindObjectsOfType<TowerEco>(true);
+
+
+        if (tutorialCompleted)
+        {
+            foreach (GameObject enemy in tutorialEnemies)
+            {
+                Destroy(enemy);
+            }
+
+            player.UpdateCoinAmount(5);
+            player.health = player.maxHealth;
+            player.UpdateHealthBar();
+
+            player.transform.position = playerStartPos.position;
+            player.transform.rotation = playerStartPos.rotation;
+            player.transform.localScale = playerStartPos.localScale;
+
+            EnableTowerEcos();
+            tutorialEnemies.Clear();
+            StartLevel();            
+        }
     }
 
     public void WinCondition()
@@ -84,12 +116,30 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+    
+    public void Level1()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
+    }
+    
+    public void Level2()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(2);
+    }
 
     public void MainMenu()
     {
+        PlayerPrefs.SetInt("TutorialCompleted", 0);
         Time.timeScale = 1;
-        //SceneManager.LoadScene(0);
-        Debug.Log("go to main menu boop boop");
+        
+        SceneManager.LoadScene(0);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
     
     public void EnableTowerEcos()
@@ -99,11 +149,14 @@ public class GameStateManager : MonoBehaviour
             towerEco.gameObject.SetActive(true);
             towerEco.enabled = true;
             towerEco.StartCoroutine(towerEco.LookAt());
+            towerEco.buyUi.transform.GetChild(2).GetComponent<TMP_Text>().color = Color.red;
         }
     }
 
     public void StartLevel()
     {
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+
         StartCoroutine(CountDown(waveTimer));
     }
     
@@ -113,12 +166,20 @@ public class GameStateManager : MonoBehaviour
             EnemySpawnController.Instance.waveNumber == 7 ||
             EnemySpawnController.Instance.waveNumber == 10)
         {
+            foreach (Item item in Resources.FindObjectsOfTypeAll(typeof(Item)) as Item[])
+            {
+                item.moveToPlayer = true;
+            }
+
             StartCoroutine(CountDown(waveTimerIntermission));
             SpawnPortal.Instance.ChangePortalState(SpawnPortal.PortalStates.PASSIVE);
         }
         else
+        {
             StartCoroutine(CountDown(waveTimer));
+        }
     }
+            
 
     public IEnumerator CountDown(int timerDuration)
     {
@@ -145,5 +206,10 @@ public class GameStateManager : MonoBehaviour
             EnemySpawnController.Instance.StartCoroutine(EnemySpawnController.Instance.StartNewWave());
 
         SpawnPortal.Instance.ChangePortalState(SpawnPortal.PortalStates.AGRESSIVE);
+
+        foreach (Item item in Resources.FindObjectsOfTypeAll(typeof(Item)) as Item[])
+        {
+            item.moveToPlayer = false;
+        }
     }
 }

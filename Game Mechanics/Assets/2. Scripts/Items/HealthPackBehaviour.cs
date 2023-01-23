@@ -12,10 +12,7 @@ public class HealthPackBehaviour : Item
         {
             var player = collision.gameObject.GetComponent<CharacterController>(); 
             
-            player.health += healthPackAmount;
-            
-            if (player.health > player.maxHealth)
-                player.health = player.maxHealth;
+            player.health = player.maxHealth;
 
             player.UpdateHealthBar();
 

@@ -13,7 +13,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
 
     void Start()
     {
-        Invoke(nameof(SpawnExplosion), explosionLifeTime);
+        Invoke(nameof(SpawnItem), explosionLifeTime);
         radius = GetComponent<SphereCollider>().radius * 2;
     }
 
@@ -24,7 +24,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
         {
             if (other.TryGetComponent<CharacterController>(out CharacterController player))
             {
-                missileDamage = (int)(missileDamage * 0.2f);
+                missileDamage = (int)(missileDamage * 0.1f);
             }
 
             damagable.TakeDamage(missileDamage);
@@ -44,7 +44,7 @@ public class MissileExplosion : MonoBehaviour, ISelfDestructable
         }
     }
 
-    public void SpawnExplosion()
+    public void SpawnItem()
     {
         Destroy(gameObject);
     }
